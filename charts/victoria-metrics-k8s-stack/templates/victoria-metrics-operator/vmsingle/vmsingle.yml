@@ -6,7 +6,7 @@
 {{- $ctx := dict "helm" . "appKey" (list "vmsingle" "spec") }}
 {{- $fullname := include "vm.cr.fullname" $ctx }}
 {{- $ns := include "vm.namespace" $ctx }}
-apiVersion: operator.victoriametrics.com/v1
+apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMSingle
 metadata:
   {{- with $app.annotations }}
