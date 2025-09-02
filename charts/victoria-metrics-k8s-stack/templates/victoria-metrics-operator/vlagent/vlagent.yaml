@@ -1,22 +1,20 @@
-{{- $app := .Values.vmsingle }}
+{{- $app := .Values.vlagent }}
 {{- if $app.enabled }}
-{{- if .Values.vmcluster.enabled }}
-  {{- fail "Only one of .vmsingle.enabled and .vmcluster.enabled can be true"}}
-{{- end }}
-{{- $ctx := dict "helm" . "appKey" (list "vmsingle" "spec") }}
+{{- $ctx := dict "helm" . "appKey" (list "vlagent" "spec") }}
 {{- $fullname := include "vm.cr.fullname" $ctx }}
 {{- $ns := include "vm.namespace" $ctx }}
+---
 apiVersion: operator.victoriametrics.com/v1
-kind: VMSingle
+kind: VLAgent
 metadata:
   {{- with $app.annotations }}
   annotations: {{ toYaml . | nindent 4 }}
-  {{- end  }}
+  {{- end }}
   name: {{ $fullname }}
   namespace: {{ $ns }}
   {{- $_ := set $ctx "style" "managed" }}
   {{- $_ := set $ctx "extraLabels" ($app.labels | default dict) }}
   labels: {{ include "vm.labels" $ctx | nindent 4 }}
   {{- $_ := unset $ctx "extraLabels" }}
-spec: {{ include "vm.single.spec" $ctx | nindent 2 }}
+spec: {{ toYaml $app.spec | nindent 2 }}
 {{- end }}

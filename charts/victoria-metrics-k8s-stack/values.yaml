@@ -833,6 +833,69 @@ vmagent:
     #    hosts:
     #      - vmagent.domain.com
 
+vlagent:
+  enabled: false
+
+vlcluster:
+  # -- VLCluster labels
+  labels: { }
+  # -- VLCluster annotations
+  annotations: { }
+  # -- Create VLCluster CR
+  enabled: false
+
+vlsingle:
+  # -- VLSingle labels
+  labels: { }
+  # -- VLSingle annotations
+  annotations: { }
+  # -- Create VLSingle CR
+  enabled: false
+  spec:
+    # -- Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these [docs](https://docs.victoriametrics.com/single-server-victoriametrics/#retention)
+    retentionPeriod: 1d
+    storage:
+      volumeClaimTemplate:
+        spec:
+          resources:
+            requests:
+              storage: 20Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+  ingress:
+    enabled: true
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations:
+      { }
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    labels: { }
+    path: ""
+    pathType: Prefix
+
+    hosts:
+      - vmsingle.domain.com
+    extraPaths: [ ]
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: service
+    tls: [ ]
+    #  - secretName: vmagent-ingress-tls
+    #    hosts:
+    #      - vmagent.domain.com
+
 defaultDatasources:
   grafanaOperator:
     # -- Create datasources as CRDs (requires grafana-operator to be installed)
